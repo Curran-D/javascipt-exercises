@@ -1,35 +1,49 @@
 const caesar = function(string, shift) {
     let strArray = string.split("");
-    let alphabet = "abcdefghijklmnopqrstuvwxyz".split("");
-    let encryptedArray = [];
+    let encryptedArray = strArray.map(char => shiftChar(char, shift));
+    return encryptedArray.join("");
+}
 
-    strArray.forEach(element => {
-        if (element.toLowerCase() !== element.toUpperCase()){//letter check
-            lowerLetter = element.toLowerCase(); // lowercase element to match with alphabet array
-            alphaIndex = alphabet.findIndex(letter => letter==lowerLetter); //lookup index of element in alphabet
-            shiftedIndex = alphaIndex+shift; //cipher shift
-            if (shiftedIndex >= 26){//takes +ve shiftedIndex and adjusts by wrapping alphabet forward
-                while (shiftedIndex>=26){
-                    shiftedIndex -= 26;
-                }
-            } else if (shiftedIndex < 0) {//takes -ve shiftedIndex and adjusts by wrapping alphabet backward
-                while (shiftedIndex<0){
-                    shiftedIndex += 26;
-                }
-            }
-            shiftedLetter = alphabet[shiftedIndex] // takes shifted value from alphabet
-            if (element == element.toUpperCase()){ //to match case with original string
-                encryptedArray.push(shiftedLetter.toUpperCase());
-            } else {
-                encryptedArray.push(shiftedLetter);
-            }
+function shiftChar(char, shift){
+    let code = char.charCodeAt(0);
+    let shiftedCode = shiftCode(code, shift);
+    return String.fromCharCode(shiftedCode);
+}
 
-        } else {
-            encryptedArray.push(element); //pushed element if not a letter - maintains punctuation
+function shiftCode(code, shift) {
+    let shiftedCode = code + shift;
+    if (code <=90 && code >= 65) {
+        return wrap(shiftedCode, "upper");
+    } else if (code >= 97 && code <= 122){
+        return wrap(shiftedCode, "lower");
+    } else {
+        return code;
+    }
+}
+
+function wrap(shiftedCode, charCase) {
+    if (charCase == "upper"){
+        if (shiftedCode < 65){
+            while (shiftedCode<65){
+                shiftedCode += 26;
+            }
+        } else if (shiftedCode > 90){
+            while (shiftedCode>90){
+                shiftedCode -= 26;
+            }
         }
-    
-    });
-    return encryptedArray.join(""); //turns encrypted array into string
+    } else if (charCase == "lower"){
+        if (shiftedCode < 97){
+            while (shiftedCode<97){
+                shiftedCode += 26;
+            }
+        } else if (shiftedCode > 122){
+            while (shiftedCode>122){
+                shiftedCode -= 26;
+            }
+        }
+    }
+    return shiftedCode;
 }
 
 module.exports = caesar
