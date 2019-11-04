@@ -31,6 +31,8 @@ function wrap(shiftedCode, charCase) {
             while (shiftedCode>90){
                 shiftedCode -= 26;
             }
+        } else {
+            return shiftedCode;
         }
     } else if (charCase == "lower"){
         if (shiftedCode < 97){
